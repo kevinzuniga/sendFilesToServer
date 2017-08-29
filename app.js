@@ -9,7 +9,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('/', function(req, res){
   res.sendFile(path.join(__dirname, 'views/index.html'));
 });
-
+app.get('/list', function(req, res){
+    var updaloadDir=path.join(__dirname, '/uploads');
+    var result = 'nada';
+    fs.readdir(updaloadDir, (err, files) => {
+        res.end(JSON.stringify({ list: files }));
+    });
+});
 app.post('/upload', function(req, res){
 
   // create an incoming form object
@@ -25,6 +31,7 @@ app.post('/upload', function(req, res){
   // rename it to it's orignal name
   form.on('file', function(field, file) {
     fs.rename(file.path, path.join(form.uploadDir, file.name));
+    console.log(file.name);
   });
 
   // log any errors that occur
